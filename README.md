@@ -52,56 +52,61 @@ The application allows users to upload their study materials (PDF, DOCX, TXT, Ma
 ### 🏠 Home Page
 The landing page showcases NexNote's capabilities with system configuration status and quick access to all features.
 
-![Home Page](screenshots/Screenshot%202025-11-10%20012746.png)
-*Main dashboard showing feature overview and system status*
+![Landing Page](screenshots/landing_page.png)
+*Main dashboard showing feature overview, navigation menu, and system status*
 
 ### 💬 Chat Interface
 Interactive AI-powered chat with context-aware responses and source attribution from uploaded documents.
 
-![Chat Interface](screenshots/Screenshot%202025-11-10%20013039.png)
-*Chat interface with conversation history and source citations*
+![Chat Interface with History](screenshots/chat%20interface%20with%20chat%20history%20to%20the%20side.png)
+*Chat interface showing conversation with AI assistant and chat history sidebar for easy navigation between conversations*
 
-![Chat Example](screenshots/Screenshot%202025-11-10%20013216.png)
-*Example of AI responding to a question with document sources*
+![Chat Interface with File Upload](screenshots/chat_interface_with%20file%20upload%20to%20the%20side.png)
+*Chat interface displaying the file upload sidebar, allowing users to manage and upload study materials directly from the chat page*
 
 ### 📚 Study Tools
-Comprehensive learning tools suite for enhancing your study experience.
 
-![Study Tools Overview](screenshots/Screenshot%202025-11-10%20013430.png)
-*Study tools dashboard with options for summaries, quizzes, flashcards, and concepts*
+#### 📝 Note Summarizer
+AI-powered summarization tool that creates concise overviews of your uploaded study materials.
 
-### 📝 Quiz Generation
-AI-generated quizzes with instant feedback and explanations.
+![Note Summarizer](screenshots/note%20summarizer.png)
+*Note summarizer feature generating intelligent summaries from uploaded documents*
 
-![Quiz Generation](screenshots/Screenshot%202025-11-10%20013717.png)
-*Multiple-choice quiz generated from uploaded study materials*
+#### 🎯 Key Concept Extractor
+Automatically identifies and extracts important concepts, terms, and definitions from your study materials.
 
-![Quiz Results](screenshots/Screenshot%202025-11-10%20014048.png)
-*Quiz results showing score and explanations for each question*
+![Key Concept Extractor](screenshots/key%20concept%20extractor.png)
+*Key concept extraction tool highlighting important terms and definitions from study materials*
 
-### 🗂️ Flashcard Creator
-Spaced-repetition flashcards automatically generated from your notes.
+#### ❓ Quiz Generator
+AI-generated multiple-choice quizzes with customizable difficulty and instant feedback.
 
-![Flashcards](screenshots/Screenshot%202025-11-10%20014107.png)
-*Interactive flashcards with front/back flip animation*
+![Quiz Generator](screenshots/quiz%20genrator.png)
+*Quiz generation interface showing AI-created questions with multiple choice options and explanations*
 
-### 📅 Calendar Integration
-Study session scheduling with Google Calendar sync (optional feature).
+#### 🗂️ Flashcard Creator
+Spaced-repetition flashcards automatically generated from your notes for effective learning.
 
-![Calendar](screenshots/Screenshot%202025-11-10%20014137.png)
-*Calendar interface for scheduling study sessions*
+![Flashcards Part 1](screenshots/flashcard%20part%201.png)
+*Flashcard interface showing the front of cards with questions for active recall*
 
-### 📤 File Upload & Management
-Easy document upload with support for PDF, DOCX, TXT, and Markdown files.
+![Flashcards Part 2](screenshots/flashcard%20part%202.png)
+*Flashcard interface showing the back of cards with answers and detailed explanations*
 
-![File Upload](screenshots/Screenshot%202025-11-10%20014206.png)
-*File upload interface showing drag-and-drop area and processing status*
+#### 📊 Study Progress & Analytics
+Track your learning journey with comprehensive analytics and performance metrics.
 
-### 📊 Study Progress
-Track your learning journey with analytics and progress metrics.
+![Progress Dashboard](screenshots/progress.png)
+*Study progress dashboard displaying quiz scores, session history, and learning analytics*
 
-![Progress Dashboard](screenshots/Screenshot%202025-11-10%20014313.png)
-*Study analytics showing quiz scores and session history*
+### 📅 Smart Calendar Integration
+Study session scheduling with Google Calendar sync and natural language event creation.
+
+![Smart Calendar Part 1](screenshots/smart%20calendar%20part%201.png)
+*Calendar interface with form-based event creation and upcoming study sessions display*
+
+![Smart Calendar Part 2](screenshots/smart%20calendar%20part%202.png)
+*Calendar showing scheduled study sessions and Google Calendar integration features*
 
 ### 🎨 Key UI Features Demonstrated
 

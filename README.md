@@ -890,4 +890,4 @@ Future enhancements planned:
 
 **Built with ❤️ using Flask, Ollama, and Pinecone**
 
-*Developed by Damewan Bareh as part of an AI/ML engineering demonstration project*
+*Developed by Damewan Bareh as part of the Diligent Internship Assignment*

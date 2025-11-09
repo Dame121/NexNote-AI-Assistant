@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Study Tools - NexNote AI Assistant{% endblock %}
+
+{% block content %}
+<div class="study-container">
+    <div class="study-header">
+        <h2>📚 Study Tools & Learning Assistant</h2>
+        <p>Enhance your learning with AI-powered study tools!</p>
+    </div>
+
+    {% if uploaded_files %}
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="summary">📝 Summary</button>
+            <button class="tab-btn" data-tab="quiz">❓ Quiz</button>
+            <button class="tab-btn" data-tab="concepts">🎯 Concepts</button>
+            <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+            <button class="tab-btn" data-tab="progress">📊 Progress</button>
+        </div>
+
+        <!-- Summary Tab -->
+        <div class="tab-content active" id="summary-tab">
+            <h3>📝 Note Summarizer</h3>
+            <select id="summaryFileSelect" class="form-select">
+                <option value="">Choose a note...</option>
+                {% for filename in uploaded_files.keys() %}
+                <option value="{{ filename }}">{{ filename }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
+            <div id="summaryResult" class="result-container"></div>
+        </div>
+
+        <!-- Quiz Tab -->
+        <div class="tab-content" id="quiz-tab">
+            <h3>❓ Quiz Generator</h3>
+            <select id="quizFileSelect" class="form-select">
+                <option value="">Choose a note...</option>
+                {% for filename in uploaded_files.keys() %}
+                <option value="{{ filename }}">{{ filename }}</option>
+                {% endfor %}
+            </select>
+            <div class="form-group">
+                <label>Number of Questions:</label>
+                <input type="range" id="numQuestions" min="3" max="10" value="5" 
+                       oninput="document.getElementById('numQuestionsValue').textContent=this.value">
+                <span id="numQuestionsValue">5</span>
+            </div>
+            <button class="btn btn-primary" onclick="generateQuiz()">Generate Quiz</button>
+            <div id="quizResult" class="result-container"></div>
+        </div>
+
+        <!-- Concepts Tab -->
+        <div class="tab-content" id="concepts-tab">
+            <h3>🎯 Key Concepts Extractor</h3>
+            <select id="conceptsFileSelect" class="form-select">
+                <option value="">Choose a note...</option>
+                {% for filename in uploaded_files.keys() %}
+                <option value="{{ filename }}">{{ filename }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" onclick="extractConcepts()">Extract Concepts</button>
+            <div id="conceptsResult" class="result-container"></div>
+        </div>
+
+        <!-- Flashcards Tab -->
+        <div class="tab-content" id="flashcards-tab">
+            <h3>🗂️ Flashcard Generator</h3>
+            <select id="flashcardsFileSelect" class="form-select">
+                <option value="">Choose a note...</option>
+                {% for filename in uploaded_files.keys() %}
+                <option value="{{ filename }}">{{ filename }}</option>
+                {% endfor %}
+            </select>
+            <div class="form-group">
+                <label>Number of Cards:</label>
+                <input type="range" id="numCards" min="5" max="20" value="10" 
+                       oninput="document.getElementById('numCardsValue').textContent=this.value">
+                <span id="numCardsValue">10</span>
+            </div>
+            <button class="btn btn-primary" onclick="generateFlashcards()">Generate Flashcards</button>
+            <div id="flashcardsResult" class="result-container"></div>
+        </div>
+
+        <!-- Progress Tab -->
+        <div class="tab-content" id="progress-tab">
+            <h3>📊 Study Progress</h3>
+            <button class="btn btn-secondary" onclick="loadStudyProgress()">Refresh Progress</button>
+            <div id="progressResult" class="result-container"></div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <h3>No Notes Uploaded Yet</h3>
+        <p>Upload some notes first to use study tools!</p>
+        <p class="text-muted">Use the sidebar to upload your study materials.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/study.js') }}"></script>
+{% endblock %}

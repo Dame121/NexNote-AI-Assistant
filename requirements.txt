@@ -1,0 +1,32 @@
+# Flask Web Framework
+Flask==3.0.0
+Flask-Session==0.5.0
+
+# AI and Vector Database
+ollama>=0.1.0
+pinecone-client>=3.0.0,<4.0.0
+
+# Document Processing
+PyPDF2>=3.0.0
+python-docx>=1.0.0
+
+# Environment and Configuration
+python-dotenv>=1.0.0
+
+# Google Calendar Integration (Optional)
+google-auth>=2.23.0
+google-auth-oauthlib>=1.1.0
+google-auth-httplib2>=0.1.1
+google-api-python-client>=2.100.0
+python-dateutil>=2.8.2
+pytz>=2023.3
+tzlocal>=5.0
+
+# Additional Dependencies
+Werkzeug>=3.0.0
+
+# Voice Assistant (Speech-to-Text and Text-to-Speech)
+SpeechRecognition>=3.10.0
+gTTS>=2.5.0
+pygame>=2.5.0
+pyaudio>=0.2.13

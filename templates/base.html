@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NexNote - Personal AI Assistant{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                    <span class="toggle-icon">☰</span>
+                </button>
+                <a href="{{ url_for('index') }}" class="nav-brand">
+                    <span class="brand-icon">🤖</span>
+                    <span class="brand-text">NexNote</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('chat') }}" class="nav-link {% if request.endpoint == 'chat' %}active{% endif %}">
+                    💬 Chat
+                </a>
+                {% if voice_assistant_available %}
+                <a href="{{ url_for('voice_chat') }}" class="nav-link {% if request.endpoint == 'voice_chat' %}active{% endif %}">
+                    🎤 Voice Chat
+                </a>
+                {% endif %}
+                {% if study_features_available %}
+                <a href="{{ url_for('study_tools') }}" class="nav-link {% if request.endpoint == 'study_tools' %}active{% endif %}">
+                    📚 Study Tools
+                </a>
+                {% endif %}
+                {% if calendar_enabled %}
+                <a href="{{ url_for('calendar_view') }}" class="nav-link {% if request.endpoint == 'calendar_view' %}active{% endif %}">
+                    📅 Calendar
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">⚙️ Configuration</h3>
+            <div class="config-status">
+                {% if pinecone_configured %}
+                <div class="status-item success">✅ Pinecone API Key loaded</div>
+                {% else %}
+                <div class="status-item error">❌ Pinecone API Key not found</div>
+                {% endif %}
+                <div class="status-item info">📁 Index: {{ index_name }}</div>
+                <div class="status-item info">🤖 Chat Model: {{ chat_model }}</div>
+                <div class="status-item info">🔗 Embedding: {{ embedding_model }}</div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">💬 Chat History</h3>
+            <button class="btn btn-primary btn-block" onclick="startNewChat()">
+                ➕ New Chat
+            </button>
+            <div class="chat-history-container" id="chatHistoryContainer">
+                <div class="loading" id="chatHistoryLoading">Loading...</div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">📁 Upload Notes</h3>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="files[]" multiple 
+                       accept=".txt,.pdf,.docx,.md" class="file-input">
+                <label for="fileInput" class="file-label">
+                    <i>📎</i>
+                    <div class="label-text">Choose Files</div>
+                    <div class="label-hint">PDF, TXT, DOCX, MD</div>
+                </label>
+                <div id="selectedFiles" class="selected-files" style="display: none;"></div>
+            </form>
+            <div id="uploadStatus" class="upload-status"></div>
+        </div>
+
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">📚 Knowledge Base</h3>
+            <div id="knowledgeBase" class="knowledge-base">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+
+        <div class="sidebar-section management-section">
+            <h3 class="sidebar-title">🔧 Management</h3>
+            <div class="button-group">
+                <button class="btn btn-outline" onclick="clearConversation()">
+                    🔄 Clear Conversation
+                </button>
+                <button class="btn btn-danger-outline" onclick="clearKnowledgeBase()">
+                    🗑️ Clear Knowledge Base
+                </button>
+            </div>
+            <div class="status-item" style="margin-top: 0.75rem; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); color: var(--warning); font-size: 0.75rem; padding: 0.5rem 0.625rem;">
+                ⚠️ Clear Knowledge removes ALL uploaded notes
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

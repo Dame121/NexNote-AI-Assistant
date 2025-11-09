@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Chat - NexNote AI Assistant{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="chat-header-main">
+            <h2 class="chat-title">
+                <span class="title-icon">🤖</span>
+                <span id="chatTitle">{{ chat_title }}</span>
+            </h2>
+            <div class="chat-actions">
+                <button class="btn-icon" onclick="clearCurrentChat()" title="Clear conversation">
+                    <span>🗑️</span>
+                </button>
+            </div>
+        </div>
+        <p class="chat-subtitle">Ask me anything about your notes and knowledge base!</p>
+        <div class="chat-stats" id="chatStats">
+            <span class="stat-item">
+                <span class="stat-icon">💬</span>
+                <span id="messageCount">0</span> messages
+            </span>
+            <span class="stat-item">
+                <span class="stat-icon">🧠</span>
+                <span id="memoryStatus">Memory active</span>
+            </span>
+            <span class="stat-item">
+                <span class="stat-icon">📚</span>
+                <span id="contextUsed">No</span> context
+            </span>
+        </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="message-wrapper {{ message.role }}" data-message-id="{{ loop.index }}">
+                <div class="message-avatar">
+                    {% if message.role == 'user' %}
+                    <span>👤</span>
+                    {% else %}
+                    <span>🤖</span>
+                    {% endif %}
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-role">{{ 'You' if message.role == 'user' else 'NexNote' }}</span>
+                        <div class="message-actions">
+                            <button class="msg-action-btn" onclick="copyMessage(this)" title="Copy">
+                                <span>📋</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="message-text">{{ message.content | safe }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">💬</div>
+            <h3>Start a Conversation with NexNote</h3>
+            <p>I can help you with your notes, answer questions, and much more!</p>
+            
+            <div class="example-questions">
+                <p class="example-header"><strong>💡 Try asking:</strong></p>
+                <div class="example-grid">
+                    <button class="example-btn" onclick="fillPrompt('Summarize my notes on operating systems')">
+                        <span class="example-icon">📝</span>
+                        <span class="example-text">Summarize my notes on operating systems</span>
+                    </button>
+                    <button class="example-btn" onclick="fillPrompt('What are the key concepts in my database notes?')">
+                        <span class="example-icon">🔑</span>
+                        <span class="example-text">Key concepts in my database notes</span>
+                    </button>
+                    <button class="example-btn" onclick="fillPrompt('Explain the differences between process and thread')">
+                        <span class="example-icon">🧠</span>
+                        <span class="example-text">Explain process vs thread</span>
+                    </button>
+                    <button class="example-btn" onclick="fillPrompt('Create a study plan for data structures')">
+                        <span class="example-icon">📅</span>
+                        <span class="example-text">Create a study plan</span>
+                    </button>
+                    <button class="example-btn" onclick="fillPrompt('What topics should I review for my exam?')">
+                        <span class="example-icon">🎯</span>
+                        <span class="example-text">Exam preparation help</span>
+                    </button>
+                    <button class="example-btn" onclick="fillPrompt('Generate practice questions from my notes')">
+                        <span class="example-icon">❓</span>
+                        <span class="example-text">Generate practice questions</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="capabilities-info">
+                <p class="capabilities-header">✨ What I can do:</p>
+                <div class="capabilities-grid">
+                    <div class="capability-item">
+                        <span class="cap-icon">📚</span>
+                        <span>Search your knowledge base</span>
+                    </div>
+                    <div class="capability-item">
+                        <span class="cap-icon">💡</span>
+                        <span>Answer questions</span>
+                    </div>
+                    <div class="capability-item">
+                        <span class="cap-icon">✍️</span>
+                        <span>Summarize notes</span>
+                    </div>
+                    <div class="capability-item">
+                        <span class="cap-icon">🎓</span>
+                        <span>Create study materials</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Typing indicator -->
+        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+            <div class="message-wrapper assistant">
+                <div class="message-avatar">
+                    <span>🤖</span>
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-role">NexNote</span>
+                    </div>
+                    <div class="typing-animation">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span class="typing-text">Thinking...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-input-container">
+        <div class="input-suggestions" id="inputSuggestions" style="display: none;">
+            <!-- Auto-suggestions will appear here -->
+        </div>
+        <form id="chatForm" class="chat-form">
+            <div class="input-wrapper">
+                <textarea 
+                    id="messageInput" 
+                    class="chat-input" 
+                    placeholder="Ask NexNote anything about your notes..."
+                    rows="1"
+                    autocomplete="off"
+                ></textarea>
+                <div class="input-actions">
+                    <button type="button" class="input-action-btn" onclick="clearInput()" title="Clear input">
+                        <span>✖️</span>
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="btn-send" id="sendButton">
+                <span class="send-icon">📤</span>
+                <span class="send-text">Send</span>
+            </button>
+        </form>
+        <div class="input-hint">
+            <span>💡 Press <kbd>Enter</kbd> to send • <kbd>Shift+Enter</kbd> for new line</span>
+        </div>
+    </div>
+</div>
+
+<!-- Sources Modal -->
+<div id="sourcesModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📚 Knowledge Base Sources</h3>
+            <button class="modal-close" onclick="closeSourcesModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="sourcesContent">
+            <!-- Sources will be populated here -->
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification Container -->
+<div id="toastContainer" class="toast-container"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

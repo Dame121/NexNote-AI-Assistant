@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Home - NexNote AI Assistant{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="hero-section">
+        <h1 class="hero-title">
+            <span class="hero-icon">🤖</span>
+            Welcome to NexNote
+        </h1>
+        <p class="hero-subtitle">Your Personal AI Study Assistant</p>
+        <p class="hero-description">
+            A powerful AI assistant that helps you manage, query, and study your notes using 
+            vector search and local LLM technology.
+        </p>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3>Chat Interface</h3>
+            <p>Natural conversation with AI about your notes</p>
+            <a href="{{ url_for('chat') }}" class="btn btn-primary">Start Chatting</a>
+        </div>
+
+        {% if voice_assistant_available %}
+        <div class="feature-card">
+            <div class="feature-icon">🎤</div>
+            <h3>Voice Chat</h3>
+            <p>Talk to your AI assistant using voice commands</p>
+            <a href="{{ url_for('voice_chat') }}" class="btn btn-primary">Start Voice Chat</a>
+        </div>
+        {% endif %}
+
+        {% if study_features_available %}
+        <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3>Study Tools</h3>
+            <p>Summaries, quizzes, flashcards, and more</p>
+            <a href="{{ url_for('study_tools') }}" class="btn btn-primary">Study Now</a>
+        </div>
+        {% endif %}
+
+        {% if calendar_enabled %}
+        <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3>Calendar & Tasks</h3>
+            <p>Schedule study sessions and reminders</p>
+            <a href="{{ url_for('calendar_view') }}" class="btn btn-primary">View Calendar</a>
+        </div>
+        {% endif %}
+
+        <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <h3>Vector Search</h3>
+            <p>Semantic search through all your notes</p>
+            <span class="badge badge-info">Powered by Pinecone</span>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <h3>Multi-Format Support</h3>
+            <p>Upload TXT, PDF, DOCX, and Markdown files</p>
+            <span class="badge badge-success">Ready to Use</span>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">💾</div>
+            <h3>Chat History</h3>
+            <p>Save and revisit your conversations</p>
+            <span class="badge badge-secondary">Auto-Save</span>
+        </div>
+    </div>
+
+    <div class="getting-started">
+        <h2>🚀 Getting Started</h2>
+        <ol class="steps-list">
+            <li>
+                <strong>Upload Your Notes:</strong> 
+                Use the sidebar to upload your study materials (TXT, PDF, DOCX, MD)
+            </li>
+            <li>
+                <strong>Process Files:</strong> 
+                Click "Process Files" to index your notes in the vector database
+            </li>
+            <li>
+                <strong>Start Learning:</strong> 
+                Go to Chat to ask questions or Study Tools to create summaries, quizzes, and flashcards
+            </li>
+            {% if calendar_enabled %}
+            <li>
+                <strong>Schedule Study Sessions:</strong> 
+                Use the Calendar to plan your study time and set reminders
+            </li>
+            {% endif %}
+        </ol>
+    </div>
+
+    <div class="system-requirements">
+        <h3>📋 System Requirements</h3>
+        <div class="requirements-grid">
+            <div class="requirement-item">
+                <span class="req-icon">✅</span>
+                <div>
+                    <strong>Ollama Running</strong>
+                    <p>Local LLM service must be active</p>
+                </div>
+            </div>
+            <div class="requirement-item">
+                <span class="req-icon">✅</span>
+                <div>
+                    <strong>Models Downloaded</strong>
+                    <p>{{ chat_model }} & {{ embedding_model }}</p>
+                </div>
+            </div>
+            <div class="requirement-item">
+                <span class="req-icon">{% if pinecone_configured %}✅{% else %}❌{% endif %}</span>
+                <div>
+                    <strong>Pinecone API Key</strong>
+                    <p>{% if pinecone_configured %}Configured{% else %}Not configured{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tips-section">
+        <h3>💡 Tips</h3>
+        <ul class="tips-list">
+            <li>Upload multiple files at once for comprehensive knowledge coverage</li>
+            <li>Use natural language when asking questions</li>
+            <li>Check the sources provided with each answer for context</li>
+            {% if study_features_available %}
+            <li>Take quizzes regularly to reinforce your learning</li>
+            <li>Use flashcards for active recall practice</li>
+            {% endif %}
+            {% if calendar_enabled %}
+            <li>Schedule study sessions using natural language: "Schedule OS Revision tomorrow at 8 PM"</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# Flask
+instance/
+.webassets-cache
+.flask_session/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads and Data
+uploads/*
+!uploads/.gitkeep
+chat_history/*
+!chat_history/.gitkeep
+study_progress/*
+!study_progress/.gitkeep
+
+# Google Calendar (SENSITIVE - Never commit!)
+credentials.json
+calendar_token.pickle
+token.pickle
+token.json
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.cache

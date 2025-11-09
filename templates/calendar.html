@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+
+{% block title %}Calendar - NexNote AI Assistant{% endblock %}
+
+{% block content %}
+<div class="calendar-container">
+    <div class="calendar-header-banner">
+        <div class="calendar-hero">
+            <div class="calendar-icon-large">📅</div>
+            <h1 class="calendar-main-title">Smart Calendar</h1>
+            <p class="calendar-subtitle">Plan smarter. Study better. Achieve more.</p>
+        </div>
+    </div>
+
+    {% if not authenticated %}
+    <div class="auth-section">
+        <div class="auth-card">
+            <div class="auth-icon">🔐</div>
+            <h3>Connect Your Google Calendar</h3>
+            <p>Unlock powerful scheduling features by connecting your Google Calendar</p>
+            
+            <div class="auth-benefits">
+                <div class="benefit-item">
+                    <span class="benefit-icon">✨</span>
+                    <span>Natural language scheduling</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">⏰</span>
+                    <span>Smart reminders</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">📊</span>
+                    <span>Study session tracking</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🔔</span>
+                    <span>Event notifications</span>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary btn-connect" onclick="authenticateCalendar()">
+                <span>🔗</span> Connect Google Calendar
+            </button>
+        </div>
+        
+        <div class="setup-card">
+            <details class="setup-details">
+                <summary>
+                    <span class="setup-icon">ℹ️</span>
+                    <span>Setup Guide</span>
+                    <span class="expand-arrow">▼</span>
+                </summary>
+                <div class="setup-content">
+                    <div class="setup-steps">
+                        <div class="setup-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <strong>Create Google Cloud Project</strong>
+                                <p>Visit <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> and create a new project</p>
+                            </div>
+                        </div>
+                        <div class="setup-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <strong>Enable Calendar API</strong>
+                                <p>Enable the Google Calendar API for your project</p>
+                            </div>
+                        </div>
+                        <div class="setup-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <strong>Create OAuth Credentials</strong>
+                                <p>Create OAuth 2.0 credentials and download as <code>credentials.json</code></p>
+                            </div>
+                        </div>
+                        <div class="setup-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <strong>Install Credentials</strong>
+                                <p>Place <code>credentials.json</code> in your flask_app directory</p>
+                            </div>
+                        </div>
+                        <div class="setup-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <strong>Connect</strong>
+                                <p>Click "Connect Google Calendar" above to authorize access</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </div>
+    {% else %}
+    <div class="success-banner-modern">
+        <span class="success-icon">✅</span>
+        <div class="success-text">
+            <strong>Connected to Google Calendar</strong>
+            <small>All events will sync automatically</small>
+        </div>
+    </div>
+
+    <div class="calendar-tabs-container">
+        <div class="tabs-modern">
+            <button class="tab-btn-modern active" data-tab="create">
+                <span class="tab-icon">➕</span>
+                <span class="tab-label">Create Event</span>
+            </button>
+            <button class="tab-btn-modern" data-tab="upcoming">
+                <span class="tab-icon">📋</span>
+                <span class="tab-label">Upcoming Events</span>
+            </button>
+            <button class="tab-btn-modern" data-tab="planner">
+                <span class="tab-icon">💡</span>
+                <span class="tab-label">Study Planner</span>
+            </button>
+        </div>
+
+        <!-- Create Event Tab -->
+        <div class="tab-content-modern active" id="create-tab">
+            <div class="tab-header">
+                <h3>Create New Event</h3>
+                <p>Schedule study sessions, set reminders, or plan your day</p>
+            </div>
+            
+            <div class="input-method-selector">
+                <label class="method-option">
+                    <input type="radio" name="inputMethod" value="natural" checked onchange="toggleInputMethod()">
+                    <div class="option-card">
+                        <span class="option-icon">💬</span>
+                        <div class="option-text">
+                            <strong>Natural Language</strong>
+                            <small>Just type what you want</small>
+                        </div>
+                    </div>
+                </label>
+                <label class="method-option">
+                    <input type="radio" name="inputMethod" value="form" onchange="toggleInputMethod()">
+                    <div class="option-card">
+                        <span class="option-icon">📝</span>
+                        <div class="option-text">
+                            <strong>Form Input</strong>
+                            <small>Fill in the details</small>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Natural Language Input -->
+            <div id="naturalInput" class="input-method-content">
+                <div class="examples-section">
+                    <p class="examples-title">💡 Try these examples:</p>
+                    <div class="examples-grid">
+                        <div class="example-chip" onclick="fillExample('Schedule OS Revision tomorrow at 8 PM')">
+                            Schedule OS Revision tomorrow at 8 PM
+                        </div>
+                        <div class="example-chip" onclick="fillExample('Add meeting on 15th Nov at 3:30 PM for 2 hours')">
+                            Add meeting on 15th Nov at 3:30 PM for 2 hours
+                        </div>
+                        <div class="example-chip" onclick="fillExample('Remind me to study at 6 AM tomorrow')">
+                            Remind me to study at 6 AM tomorrow
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="natural-input-box">
+                    <input type="text" id="naturalLanguageInput" class="modern-input" 
+                           placeholder="Type what you want to schedule...">
+                    <button class="btn btn-primary btn-create" onclick="createEventFromText()">
+                        <span>✨</span> Create Event
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Input -->
+            <div id="formInput" class="input-method-content" style="display: none;">
+                <form id="eventForm" class="modern-form">
+                    <div class="form-section">
+                        <label class="modern-label">
+                            <span class="label-icon">📌</span>
+                            Event Title *
+                        </label>
+                        <input type="text" id="eventTitle" class="modern-input" placeholder="e.g., OS Revision Session" required>
+                    </div>
+                    
+                    <div class="form-row-modern">
+                        <div class="form-section">
+                            <label class="modern-label">
+                                <span class="label-icon">📅</span>
+                                Date *
+                            </label>
+                            <input type="date" id="eventDate" class="modern-input" required>
+                        </div>
+                        <div class="form-section">
+                            <label class="modern-label">
+                                <span class="label-icon">🕐</span>
+                                Time *
+                            </label>
+                            <input type="time" id="eventTime" class="modern-input" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row-modern">
+                        <div class="form-section">
+                            <label class="modern-label">
+                                <span class="label-icon">⏱️</span>
+                                Duration (minutes)
+                            </label>
+                            <input type="number" id="eventDuration" class="modern-input" value="60" min="15" step="15">
+                        </div>
+                        <div class="form-section">
+                            <label class="modern-label">
+                                <span class="label-icon">🔔</span>
+                                Reminder (minutes before)
+                            </label>
+                            <input type="number" id="eventReminder" class="modern-input" value="30" min="5" step="5">
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label class="modern-label">
+                            <span class="label-icon">📝</span>
+                            Description (optional)
+                        </label>
+                        <textarea id="eventDescription" class="modern-textarea" rows="3" 
+                                  placeholder="Add notes about this event..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <span>📅</span> Create Event
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Upcoming Events Tab -->
+        <div class="tab-content-modern" id="upcoming-tab">
+            <div class="tab-header">
+                <h3>Upcoming Events</h3>
+                <p>View and manage your scheduled events</p>
+            </div>
+            
+            <div class="controls-bar">
+                <select id="maxEvents" class="modern-select">
+                    <option value="5">Show 5 events</option>
+                    <option value="10" selected>Show 10 events</option>
+                    <option value="20">Show 20 events</option>
+                    <option value="50">Show 50 events</option>
+                </select>
+                <button class="btn btn-secondary btn-refresh" onclick="loadUpcomingEvents()">
+                    <span>🔄</span> Refresh
+                </button>
+            </div>
+            
+            <div id="upcomingEvents" class="events-container">
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Loading events...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Planner Tab -->
+        <div class="tab-content-modern" id="planner-tab">
+            <div class="tab-header">
+                <h3>📚 Study Planner</h3>
+                <p>Quick templates for common study schedules</p>
+            </div>
+            
+            <div class="planner-templates">
+                <div class="template-card" onclick="scheduleTemplate('morning')">
+                    <div class="template-icon">🌅</div>
+                    <h4>Morning Study</h4>
+                    <p class="template-time">6:00 AM - 8:00 AM</p>
+                    <p class="template-desc">Deep focus session</p>
+                    <button class="template-btn">Schedule</button>
+                </div>
+                
+                <div class="template-card" onclick="scheduleTemplate('afternoon')">
+                    <div class="template-icon">☀️</div>
+                    <h4>Afternoon Revision</h4>
+                    <p class="template-time">2:00 PM - 4:00 PM</p>
+                    <p class="template-desc">Review and practice</p>
+                    <button class="template-btn">Schedule</button>
+                </div>
+                
+                <div class="template-card" onclick="scheduleTemplate('evening')">
+                    <div class="template-icon">🌙</div>
+                    <h4>Evening Practice</h4>
+                    <p class="template-time">8:00 PM - 10:00 PM</p>
+                    <p class="template-desc">Problem solving</p>
+                    <button class="template-btn">Schedule</button>
+                </div>
+            </div>
+            
+            <div class="quick-schedule-section">
+                <h4>💡 Quick Schedule</h4>
+                <p>Schedule a study session for tomorrow evening</p>
+                <div class="quick-input-group">
+                    <input type="text" id="subjectInput" class="modern-input" 
+                           placeholder="Subject (e.g., Operating Systems)">
+                    <button class="btn btn-primary" onclick="quickSchedule()">
+                        <span>⚡</span> Schedule for Tomorrow 8 PM
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+{% endblock %}

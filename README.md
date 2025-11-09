@@ -58,10 +58,10 @@ The landing page showcases NexNote's capabilities with system configuration stat
 ### 💬 Chat Interface
 Interactive AI-powered chat with context-aware responses and source attribution from uploaded documents.
 
-![Chat Interface with History](screenshots/chat%20interface%20with%20chat%20history%20to%20the%20side.png)
+![Chat Interface with History](screenshots/chat-interface-with-history.png)
 *Chat interface showing conversation with AI assistant and chat history sidebar for easy navigation between conversations*
 
-![Chat Interface with File Upload](screenshots/chat_interface_with%20file%20upload%20to%20the%20side.png)
+![Chat Interface with File Upload](screenshots/chat-interface-with-file-upload.png)
 *Chat interface displaying the file upload sidebar, allowing users to manage and upload study materials directly from the chat page*
 
 ### 📚 Study Tools
@@ -69,28 +69,28 @@ Interactive AI-powered chat with context-aware responses and source attribution 
 #### 📝 Note Summarizer
 AI-powered summarization tool that creates concise overviews of your uploaded study materials.
 
-![Note Summarizer](screenshots/note%20summarizer.png)
+![Note Summarizer](screenshots/note-summarizer.png)
 *Note summarizer feature generating intelligent summaries from uploaded documents*
 
 #### 🎯 Key Concept Extractor
 Automatically identifies and extracts important concepts, terms, and definitions from your study materials.
 
-![Key Concept Extractor](screenshots/key%20concept%20extractor.png)
+![Key Concept Extractor](screenshots/key-concept-extractor.png)
 *Key concept extraction tool highlighting important terms and definitions from study materials*
 
 #### ❓ Quiz Generator
 AI-generated multiple-choice quizzes with customizable difficulty and instant feedback.
 
-![Quiz Generator](screenshots/quiz%20genrator.png)
+![Quiz Generator](screenshots/quiz-generator.png)
 *Quiz generation interface showing AI-created questions with multiple choice options and explanations*
 
 #### 🗂️ Flashcard Creator
 Spaced-repetition flashcards automatically generated from your notes for effective learning.
 
-![Flashcards Part 1](screenshots/flashcard%20part%201.png)
+![Flashcards Part 1](screenshots/flashcard-part-1.png)
 *Flashcard interface showing the front of cards with questions for active recall*
 
-![Flashcards Part 2](screenshots/flashcard%20part%202.png)
+![Flashcards Part 2](screenshots/flashcard-part-2.png)
 *Flashcard interface showing the back of cards with answers and detailed explanations*
 
 #### 📊 Study Progress & Analytics
@@ -102,10 +102,10 @@ Track your learning journey with comprehensive analytics and performance metrics
 ### 📅 Smart Calendar Integration
 Study session scheduling with Google Calendar sync and natural language event creation.
 
-![Smart Calendar Part 1](screenshots/smart%20calendar%20part%201.png)
+![Smart Calendar Part 1](screenshots/smart-calendar-part-1.png)
 *Calendar interface with form-based event creation and upcoming study sessions display*
 
-![Smart Calendar Part 2](screenshots/smart%20calendar%20part%202.png)
+![Smart Calendar Part 2](screenshots/smart-calendar-part-2.png)
 *Calendar showing scheduled study sessions and Google Calendar integration features*
 
 ### 🎨 Key UI Features Demonstrated

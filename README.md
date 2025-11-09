@@ -12,6 +12,7 @@
 
 ## 📖 Table of Contents
 - [Overview](#-overview)
+- [Screenshots & Demo](#-screenshots--demo)
 - [Key Features](#-key-features)
 - [Architecture](#-architecture)
 - [Technologies Used](#-technologies-used)
@@ -45,6 +46,73 @@ The application allows users to upload their study materials (PDF, DOCX, TXT, Ma
 🚀 **Calendar Integration**: Google Calendar API for study scheduling  
 🚀 **Production-Ready**: Security, error handling, comprehensive documentation  
 🚀 **RESTful API**: 20+ endpoints for programmatic access
+
+## 📸 Screenshots & Demo
+
+### 🏠 Home Page
+The landing page showcases NexNote's capabilities with system configuration status and quick access to all features.
+
+![Home Page](screenshots/Screenshot%202025-11-10%20012746.png)
+*Main dashboard showing feature overview and system status*
+
+### 💬 Chat Interface
+Interactive AI-powered chat with context-aware responses and source attribution from uploaded documents.
+
+![Chat Interface](screenshots/Screenshot%202025-11-10%20013039.png)
+*Chat interface with conversation history and source citations*
+
+![Chat Example](screenshots/Screenshot%202025-11-10%20013216.png)
+*Example of AI responding to a question with document sources*
+
+### 📚 Study Tools
+Comprehensive learning tools suite for enhancing your study experience.
+
+![Study Tools Overview](screenshots/Screenshot%202025-11-10%20013430.png)
+*Study tools dashboard with options for summaries, quizzes, flashcards, and concepts*
+
+### 📝 Quiz Generation
+AI-generated quizzes with instant feedback and explanations.
+
+![Quiz Generation](screenshots/Screenshot%202025-11-10%20013717.png)
+*Multiple-choice quiz generated from uploaded study materials*
+
+![Quiz Results](screenshots/Screenshot%202025-11-10%20014048.png)
+*Quiz results showing score and explanations for each question*
+
+### 🗂️ Flashcard Creator
+Spaced-repetition flashcards automatically generated from your notes.
+
+![Flashcards](screenshots/Screenshot%202025-11-10%20014107.png)
+*Interactive flashcards with front/back flip animation*
+
+### 📅 Calendar Integration
+Study session scheduling with Google Calendar sync (optional feature).
+
+![Calendar](screenshots/Screenshot%202025-11-10%20014137.png)
+*Calendar interface for scheduling study sessions*
+
+### 📤 File Upload & Management
+Easy document upload with support for PDF, DOCX, TXT, and Markdown files.
+
+![File Upload](screenshots/Screenshot%202025-11-10%20014206.png)
+*File upload interface showing drag-and-drop area and processing status*
+
+### 📊 Study Progress
+Track your learning journey with analytics and progress metrics.
+
+![Progress Dashboard](screenshots/Screenshot%202025-11-10%20014313.png)
+*Study analytics showing quiz scores and session history*
+
+### 🎨 Key UI Features Demonstrated
+
+- ✅ **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- ✅ **Real-time Updates**: AJAX-powered interface with smooth interactions
+- ✅ **Source Attribution**: Transparent AI responses with document citations and relevance scores
+- ✅ **Progress Tracking**: Visual indicators for study progress and quiz performance
+- ✅ **Intuitive Navigation**: Clean menu structure and easy-to-use interface
+- ✅ **Modern Aesthetics**: Professional dark theme with gradient accents
+
+> **Note**: To see the application in action, follow the [Installation](#-installation) instructions and start exploring! All screenshots show actual features working with real uploaded documents.
 
 ## ✨ Key Features
 

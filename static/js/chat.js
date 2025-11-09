@@ -38,9 +38,9 @@ function clearCurrentChat() {
 }
 
 function updateChatStats() {
-    const messages = document.querySelectorAll('.message-wrapper:not(.typing-indicator .message-wrapper)');
-    const messageCount = Math.floor(messages.length / 2); // Divide by 2 (user + assistant pairs)
-    document.getElementById('messageCount').textContent = messageCount;
+    // Stats section has been removed from the UI
+    // This function is kept for backward compatibility but does nothing
+    return;
 }
 
 function copyMessage(button) {
@@ -193,9 +193,6 @@ function showSources(sources) {
     
     currentSources = sources;
     
-    // Update context stat
-    document.getElementById('contextUsed').textContent = 'Yes';
-    
     // Create sources button
     const chatMessages = document.getElementById('chatMessages');
     const lastMessage = chatMessages.querySelector('.message-wrapper.assistant:last-of-type .message-content');
@@ -334,8 +331,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show sources if available
                 if (data.sources && data.sources.length > 0) {
                     showSources(data.sources);
-                } else {
-                    document.getElementById('contextUsed').textContent = 'No';
                 }
             }
         } catch (error) {

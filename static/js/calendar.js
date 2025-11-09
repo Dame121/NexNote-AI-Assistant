@@ -1,5 +1,48 @@
 // Calendar functionality for NexNote Flask Application
 
+// ==================== TOAST NOTIFICATIONS ====================
+
+function showToast(message, type = 'info') {
+    // Create toast container if it doesn't exist
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+    
+    // Handle multi-line messages
+    const formattedMessage = message.replace(/\n/g, '<br>');
+    
+    toast.innerHTML = `
+        <span class="toast-icon">${icons[type] || icons.info}</span>
+        <span class="toast-message">${formattedMessage}</span>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Remove after duration (longer for multi-line messages)
+    const duration = message.includes('\n') ? 5000 : 3000;
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
 // ==================== INITIALIZATION ====================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -81,8 +124,9 @@ function setDefaultDateTime() {
 
 async function authenticateCalendar() {
     const btn = event.target;
+    const originalText = btn.innerHTML;
     btn.disabled = true;
-    btn.textContent = 'Connecting...';
+    btn.innerHTML = '<span>⏳</span> Connecting...';
     
     try {
         const response = await fetch('/api/calendar/authenticate', {
@@ -95,18 +139,23 @@ async function authenticateCalendar() {
         const data = await response.json();
         
         if (data.success) {
-            showToast('Successfully connected to Google Calendar!', 'success');
-            location.reload();
+            showToast('✅ Successfully connected to Google Calendar!', 'success');
+            setTimeout(() => location.reload(), 1500);
         } else {
-            showToast('Authentication failed. Check console for details.', 'error');
+            const errorMsg = data.error || 'Authentication failed';
+            if (errorMsg.includes('credentials') || errorMsg.includes('credentials.json')) {
+                showToast('❌ credentials.json not found!\n\nPlease:\n1. Create Google Cloud Project\n2. Enable Calendar API\n3. Download credentials.json\n4. Place it in: D:\\Flask App Backup\\', 'error');
+            } else {
+                showToast(`❌ Authentication failed: ${errorMsg}`, 'error');
+            }
             btn.disabled = false;
-            btn.textContent = '🔗 Connect Google Calendar';
+            btn.innerHTML = originalText;
         }
     } catch (error) {
         console.error('Authentication error:', error);
-        showToast('Authentication error', 'error');
+        showToast('❌ Connection error. Make sure Flask server is running.', 'error');
         btn.disabled = false;
-        btn.textContent = '🔗 Connect Google Calendar';
+        btn.innerHTML = originalText;
     }
 }
 
@@ -151,6 +200,12 @@ async function createEventFromText() {
         
         const data = await response.json();
         
+        if (response.status === 401 && data.needs_auth) {
+            // Need authentication
+            showToast('🔐 Please authenticate first!\n\nClick "Connect Google Calendar" to set up calendar access.', 'warning');
+            return;
+        }
+        
         if (data.success) {
             // Format the event time nicely
             const eventDate = new Date(data.event.start);
@@ -169,7 +224,7 @@ async function createEventFromText() {
             switchTab('upcoming');
             loadUpcomingEvents();
         } else {
-            showToast(`❌ Failed to create event: ${data.error || 'Unknown error'}`, 'error');
+            showToast(`❌ ${data.error || 'Failed to create event'}`, 'error');
         }
     } catch (error) {
         console.error('Error creating event:', error);
@@ -236,6 +291,12 @@ async function handleFormSubmit(e) {
         
         const data = await response.json();
         
+        if (response.status === 401 && data.needs_auth) {
+            // Need authentication
+            showToast('🔐 Please authenticate first!\n\nClick "Connect Google Calendar" to set up calendar access.', 'warning');
+            return;
+        }
+        
         if (data.success) {
             // Format the event time nicely
             const eventDate = new Date(data.event.start);
@@ -255,7 +316,7 @@ async function handleFormSubmit(e) {
             switchTab('upcoming');
             loadUpcomingEvents();
         } else {
-            showToast(`❌ Failed to create event: ${data.error || 'Unknown error'}`, 'error');
+            showToast(`❌ ${data.error || 'Failed to create event'}`, 'error');
         }
     } catch (error) {
         console.error('Error creating event:', error);
@@ -279,6 +340,20 @@ async function loadUpcomingEvents() {
     try {
         const response = await fetch(`/api/calendar/get_events?max_results=${maxEvents}`);
         const data = await response.json();
+        
+        if (response.status === 401 && data.needs_auth) {
+            eventsDiv.innerHTML = `
+                <div class="loading-state">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🔐</div>
+                    <h3>Authentication Required</h3>
+                    <p>Please authenticate with Google Calendar first</p>
+                    <button class="btn btn-primary" onclick="window.location.reload()">
+                        Go to Authentication
+                    </button>
+                </div>
+            `;
+            return;
+        }
         
         if (data.error) {
             eventsDiv.innerHTML = `<div class="status-item error">❌ ${data.error}</div>`;

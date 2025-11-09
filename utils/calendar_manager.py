@@ -26,8 +26,9 @@ except ImportError:
 # If modifying these scopes, delete the token.pickle file.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
-# Get the project root directory (parent of flask_app)
-PROJECT_ROOT = Path(__file__).parent.parent.parent
+# Get the project root directory (where app.py is located)
+# __file__ is utils/calendar_manager.py, so parent is utils/, parent.parent is project root
+PROJECT_ROOT = Path(__file__).parent.parent
 TOKEN_PATH = PROJECT_ROOT / "calendar_token.pickle"
 CREDENTIALS_PATH = PROJECT_ROOT / "credentials.json"
 
@@ -49,6 +50,7 @@ class CalendarManager:
     def authenticate(self) -> bool:
         """Authenticate with Google Calendar"""
         if not CALENDAR_AVAILABLE:
+            print("Calendar packages not available")
             return False
             
         try:
@@ -56,16 +58,22 @@ class CalendarManager:
             
             # The file token.pickle stores the user's access and refresh tokens
             if TOKEN_PATH.exists():
+                print(f"Loading existing token from: {TOKEN_PATH}")
                 with open(TOKEN_PATH, 'rb') as token:
                     creds = pickle.load(token)
             
             # If there are no (valid) credentials available, let the user log in.
             if not creds or not creds.valid:
                 if creds and creds.expired and creds.refresh_token:
+                    print("Refreshing expired token...")
                     creds.refresh(Request())
                 else:
                     if not CREDENTIALS_PATH.exists():
+                        print(f"credentials.json not found at: {CREDENTIALS_PATH}")
                         return False
+                    
+                    print(f"Starting OAuth flow with credentials from: {CREDENTIALS_PATH}")
+                    print("A browser window will open for authentication...")
                     
                     flow = InstalledAppFlow.from_client_secrets_file(
                         str(CREDENTIALS_PATH), 
@@ -78,17 +86,24 @@ class CalendarManager:
                         access_type='offline',
                         prompt='consent'
                     )
+                    
+                    print("Authentication successful!")
                 
                 # Save the credentials for the next run
+                print(f"Saving token to: {TOKEN_PATH}")
                 with open(TOKEN_PATH, 'wb') as token:
                     pickle.dump(creds, token)
             
+            print("Building calendar service...")
             self.service = build('calendar', 'v3', credentials=creds)
             self.authenticated = True
+            print("✅ Calendar service ready")
             return True
             
         except Exception as e:
-            print(f"Calendar authentication failed: {str(e)}")
+            print(f"❌ Calendar authentication failed: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def create_event(self, 

@@ -509,6 +509,15 @@ def api_calendar_authenticate():
     if not calendar_enabled:
         return jsonify({'error': 'Calendar not enabled'}), 400
     
+    # Check if credentials.json exists
+    from pathlib import Path
+    credentials_path = Path(__file__).parent / 'credentials.json'
+    
+    if not credentials_path.exists():
+        return jsonify({
+            'error': 'credentials.json not found. Please download it from Google Cloud Console and place it in the app directory.'
+        }), 400
+    
     cal_mgr = CalendarManager()
     success = cal_mgr.authenticate()
     
@@ -517,89 +526,146 @@ def api_calendar_authenticate():
         session.modified = True
         return jsonify({'success': True})
     
-    return jsonify({'error': 'Authentication failed'}), 400
+    return jsonify({'error': 'Authentication failed. Check server logs for details.'}), 400
 
 @app.route('/api/calendar/create_event', methods=['POST'])
 def api_calendar_create_event():
     """Create a calendar event"""
-    if not calendar_enabled or not session.get('calendar_authenticated'):
-        return jsonify({'error': 'Calendar not available'}), 400
+    if not calendar_enabled:
+        return jsonify({'error': 'Calendar feature is not enabled'}), 400
+    
+    # Try to authenticate if not already authenticated
+    if not session.get('calendar_authenticated'):
+        from pathlib import Path
+        credentials_path = Path(__file__).parent / 'credentials.json'
+        
+        if not credentials_path.exists():
+            return jsonify({
+                'error': 'Please authenticate first. credentials.json not found.',
+                'needs_auth': True
+            }), 401
+        
+        # Try to authenticate using existing token
+        cal_mgr = CalendarManager()
+        if cal_mgr.authenticate():
+            session['calendar_authenticated'] = True
+            session.modified = True
+        else:
+            return jsonify({
+                'error': 'Please authenticate first. Click "Connect Google Calendar" button.',
+                'needs_auth': True
+            }), 401
     
     data = request.get_json()
     
-    # Parse natural language or form data
-    if data.get('natural_language'):
-        parsed = parse_schedule_request(data['natural_language'])
-        if not parsed or not parsed['datetime']:
-            return jsonify({'error': 'Could not parse schedule'}), 400
+    try:
+        # Parse natural language or form data
+        if data.get('natural_language'):
+            parsed = parse_schedule_request(data['natural_language'])
+            if not parsed or not parsed['datetime']:
+                return jsonify({'error': 'Could not parse schedule. Try: "Schedule OS Revision tomorrow at 8 PM"'}), 400
+            
+            title = parsed['title']
+            start_time = parsed['datetime']
+            duration = parsed['duration']
+            description = "Created by NexNote"
+            reminder = parsed['reminder']
+        else:
+            title = data.get('title')
+            date_str = data.get('date')
+            time_str = data.get('time')
+            duration = data.get('duration', 60)
+            description = data.get('description', '')
+            reminder = data.get('reminder', 30)
+            
+            if not title or not date_str or not time_str:
+                return jsonify({'error': 'Missing required fields: title, date, or time'}), 400
+            
+            # Combine date and time - parse as naive datetime first
+            naive_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+            
+            # Localize to the detected local timezone
+            from tzlocal import get_localzone
+            import pytz
+            local_tz = pytz.timezone(str(get_localzone()))
+            start_time = local_tz.localize(naive_dt)
         
-        title = parsed['title']
-        start_time = parsed['datetime']
-        duration = parsed['duration']
-        description = "Created by NexNote"
-        reminder = parsed['reminder']
-    else:
-        title = data.get('title')
-        date_str = data.get('date')
-        time_str = data.get('time')
-        duration = data.get('duration', 60)
-        description = data.get('description', '')
-        reminder = data.get('reminder', 30)
+        cal_mgr = CalendarManager()
+        event = cal_mgr.create_event(
+            title=title,
+            start_time=start_time,
+            duration_minutes=int(duration),
+            description=description,
+            reminder_minutes=int(reminder)
+        )
         
-        # Combine date and time - parse as naive datetime first
-        naive_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+        if event:
+            return jsonify({
+                'success': True,
+                'event': {
+                    'id': event.get('id'),
+                    'title': title,
+                    'start': start_time.isoformat(),
+                    'htmlLink': event.get('htmlLink')
+                }
+            })
         
-        # Localize to the detected local timezone
-        from tzlocal import get_localzone
-        import pytz
-        local_tz = pytz.timezone(str(get_localzone()))
-        start_time = local_tz.localize(naive_dt)
-    
-    cal_mgr = CalendarManager()
-    event = cal_mgr.create_event(
-        title=title,
-        start_time=start_time,
-        duration_minutes=int(duration),
-        description=description,
-        reminder_minutes=int(reminder)
-    )
-    
-    if event:
-        return jsonify({
-            'success': True,
-            'event': {
-                'id': event.get('id'),
-                'title': title,
-                'start': start_time.isoformat(),
-                'htmlLink': event.get('htmlLink')
-            }
-        })
-    
-    return jsonify({'error': 'Failed to create event'}), 400
+        return jsonify({'error': 'Failed to create event. Check server logs for details.'}), 400
+        
+    except Exception as e:
+        print(f"Error creating calendar event: {str(e)}")
+        return jsonify({'error': f'Error creating event: {str(e)}'}), 500
 
 @app.route('/api/calendar/get_events', methods=['GET'])
 def api_calendar_get_events():
     """Get upcoming calendar events"""
-    if not calendar_enabled or not session.get('calendar_authenticated'):
-        return jsonify({'error': 'Calendar not available'}), 400
+    if not calendar_enabled:
+        return jsonify({'error': 'Calendar feature is not enabled'}), 400
     
-    max_results = request.args.get('max_results', 10, type=int)
+    # Try to authenticate if not already authenticated
+    if not session.get('calendar_authenticated'):
+        from pathlib import Path
+        credentials_path = Path(__file__).parent / 'credentials.json'
+        
+        if not credentials_path.exists():
+            return jsonify({
+                'error': 'Please authenticate first. credentials.json not found.',
+                'needs_auth': True
+            }), 401
+        
+        # Try to authenticate using existing token
+        cal_mgr = CalendarManager()
+        if cal_mgr.authenticate():
+            session['calendar_authenticated'] = True
+            session.modified = True
+        else:
+            return jsonify({
+                'error': 'Please authenticate first. Click "Connect Google Calendar" button.',
+                'needs_auth': True
+            }), 401
     
-    cal_mgr = CalendarManager()
-    events = cal_mgr.get_upcoming_events(max_results)
-    
-    formatted_events = []
-    for event in events:
-        formatted_events.append({
-            'id': event.get('id'),
-            'summary': event.get('summary'),
-            'start': event.get('start', {}).get('dateTime', event.get('start', {}).get('date')),
-            'description': event.get('description', ''),
-            'htmlLink': event.get('htmlLink', ''),
-            'formatted': format_event_display(event)
-        })
-    
-    return jsonify({'events': formatted_events})
+    try:
+        max_results = request.args.get('max_results', 10, type=int)
+        
+        cal_mgr = CalendarManager()
+        events = cal_mgr.get_upcoming_events(max_results)
+        
+        formatted_events = []
+        for event in events:
+            formatted_events.append({
+                'id': event.get('id'),
+                'summary': event.get('summary'),
+                'start': event.get('start', {}).get('dateTime', event.get('start', {}).get('date')),
+                'description': event.get('description', ''),
+                'htmlLink': event.get('htmlLink', ''),
+                'formatted': format_event_display(event)
+            })
+        
+        return jsonify({'events': formatted_events})
+        
+    except Exception as e:
+        print(f"Error getting calendar events: {str(e)}")
+        return jsonify({'error': f'Error loading events: {str(e)}'}), 500
 
 @app.route('/api/calendar/delete_event/<event_id>', methods=['DELETE'])
 def api_calendar_delete_event(event_id):

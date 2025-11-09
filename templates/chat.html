@@ -3,278 +3,154 @@
 {% block title %}Chat - NexNote AI Assistant{% endblock %}
 
 {% block content %}
-<div class="modern-chat-container">
-    <!-- Enhanced Header -->
-    <div class="modern-chat-header">
-        <div class="header-left">
-            <div class="ai-avatar-container">
-                <div class="ai-avatar">
-                    <div class="avatar-glow"></div>
-                    <span class="avatar-emoji">🤖</span>
-                </div>
-                <div class="status-indicator"></div>
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="chat-header-main">
+            <h2 class="chat-title">
+                <span class="title-icon">🤖</span>
+                <span id="chatTitle">{{ chat_title }}</span>
+            </h2>
+            <div class="chat-actions">
+                <button class="btn-icon" onclick="clearCurrentChat()" title="Clear conversation">
+                    <span>🗑️</span>
+                </button>
             </div>
-            <div class="header-info">
-                <h2 class="chat-title-modern" id="chatTitle">{{ chat_title }}</h2>
-                <p class="chat-status">
-                    <span class="status-dot"></span>
-                    <span>Ready to help</span>
-                </p>
-            </div>
-        </div>
-        <div class="header-right">
-            <div class="chat-metrics">
-                <div class="metric-item">
-                    <span class="metric-icon">💬</span>
-                    <span class="metric-value" id="messageCount">0</span>
-                </div>
-                <div class="metric-item">
-                    <span class="metric-icon">📚</span>
-                    <span class="metric-label">Context</span>
-                </div>
-            </div>
-            <button class="header-btn" onclick="clearCurrentChat()" title="New conversation">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 5v14M5 12h14"/>
-                </svg>
-                <span>New Chat</span>
-            </button>
         </div>
     </div>
 
-    <!-- Modern Chat Messages Area -->
-    <div class="modern-chat-messages" id="chatMessages">
+    <div class="chat-messages" id="chatMessages">
         {% if messages %}
             {% for message in messages %}
-            <div class="modern-message {{ message.role }}" data-message-id="{{ loop.index }}">
-                <div class="message-bubble">
-                    <div class="message-sender">
-                        {% if message.role == 'user' %}
-                        <div class="sender-avatar user-avatar">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                        </div>
-                        <span class="sender-name">You</span>
-                        {% else %}
-                        <div class="sender-avatar ai-avatar-small">
-                            <div class="ai-glow-small"></div>
-                            🤖
-                        </div>
-                        <span class="sender-name">NexNote AI</span>
-                        {% endif %}
-                    </div>
-                    <div class="message-body">
-                        <div class="message-text-content">{{ message.content | safe }}</div>
-                        <div class="message-footer">
-                            <span class="message-time">Just now</span>
-                            <div class="message-actions-inline">
-                                <button class="action-btn-inline" onclick="copyMessage(this)" title="Copy">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                    </svg>
-                                </button>
-                                {% if message.role == 'assistant' %}
-                                <button class="action-btn-inline" onclick="regenerateResponse(this)" title="Regenerate">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
-                                    </svg>
-                                </button>
-                                {% endif %}
-                            </div>
+            <div class="message-wrapper {{ message.role }}" data-message-id="{{ loop.index }}">
+                <div class="message-avatar">
+                    {% if message.role == 'user' %}
+                    <span>👤</span>
+                    {% else %}
+                    <span>🤖</span>
+                    {% endif %}
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-role">{{ 'You' if message.role == 'user' else 'NexNote' }}</span>
+                        <div class="message-actions">
+                            <button class="msg-action-btn" onclick="copyMessage(this)" title="Copy">
+                                <span>📋</span>
+                            </button>
                         </div>
                     </div>
+                    <div class="message-text">{{ message.content | safe }}</div>
                 </div>
             </div>
             {% endfor %}
         {% else %}
-        <!-- Enhanced Empty State -->
-        <div class="modern-empty-state">
-            <div class="empty-state-content">
-                <div class="empty-icon-modern">
-                    <div class="icon-circle">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                            <path d="M8 10h.01M12 10h.01M16 10h.01"/>
-                        </svg>
-                    </div>
-                </div>
-                <h3 class="empty-title">Let's start learning together!</h3>
-                <p class="empty-subtitle">Ask me anything about your notes and I'll help you understand better.</p>
-                
-                <!-- Quick Action Cards -->
-                <div class="quick-actions-modern">
-                    <button class="quick-action-card" onclick="fillPrompt('Summarize my recent notes')">
-                        <div class="card-icon">📝</div>
-                        <div class="card-content">
-                            <h4>Summarize Notes</h4>
-                            <p>Get a quick overview</p>
-                        </div>
+        <div class="empty-state">
+            <div class="empty-icon">💬</div>
+            <h3>Start a Conversation with NexNote</h3>
+            <p>I can help you with your notes, answer questions, and much more!</p>
+            
+            <div class="example-questions">
+                <p class="example-header"><strong>💡 Try asking:</strong></p>
+                <div class="example-grid">
+                    <button class="example-btn" onclick="fillPrompt('Summarize my notes on operating systems')">
+                        <span class="example-icon">📝</span>
+                        <span class="example-text">Summarize my notes on operating systems</span>
                     </button>
-                    <button class="quick-action-card" onclick="fillPrompt('What are the key concepts I should focus on?')">
-                        <div class="card-icon">🎯</div>
-                        <div class="card-content">
-                            <h4>Key Concepts</h4>
-                            <p>Important topics</p>
-                        </div>
+                    <button class="example-btn" onclick="fillPrompt('What are the key concepts in my database notes?')">
+                        <span class="example-icon">🔑</span>
+                        <span class="example-text">Key concepts in my database notes</span>
                     </button>
-                    <button class="quick-action-card" onclick="fillPrompt('Create a study plan for this week')">
-                        <div class="card-icon">📅</div>
-                        <div class="card-content">
-                            <h4>Study Plan</h4>
-                            <p>Organize learning</p>
-                        </div>
+                    <button class="example-btn" onclick="fillPrompt('Explain the differences between process and thread')">
+                        <span class="example-icon">🧠</span>
+                        <span class="example-text">Explain process vs thread</span>
                     </button>
-                    <button class="quick-action-card" onclick="fillPrompt('Generate practice questions')">
-                        <div class="card-icon">❓</div>
-                        <div class="card-content">
-                            <h4>Practice Quiz</h4>
-                            <p>Test knowledge</p>
-                        </div>
+                    <button class="example-btn" onclick="fillPrompt('Create a study plan for data structures')">
+                        <span class="example-icon">📅</span>
+                        <span class="example-text">Create a study plan</span>
+                    </button>
+                    <button class="example-btn" onclick="fillPrompt('What topics should I review for my exam?')">
+                        <span class="example-icon">🎯</span>
+                        <span class="example-text">Exam preparation help</span>
+                    </button>
+                    <button class="example-btn" onclick="fillPrompt('Generate practice questions from my notes')">
+                        <span class="example-icon">❓</span>
+                        <span class="example-text">Generate practice questions</span>
                     </button>
                 </div>
+            </div>
 
-                <!-- Feature Pills -->
-                <div class="feature-pills">
-                    <span class="feature-pill">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        AI-Powered
-                    </span>
-                    <span class="feature-pill">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                        Context-Aware
-                    </span>
-                    <span class="feature-pill">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM8.5 15H7.3l-2.55-3.5V15H3.5V9h1.25l2.5 3.5V9H8.5v6zm5-4.74H11v1.12h2.5v1.26H11v1.11h2.5V15h-4V9h4v1.26zm7 3.74c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1V9h1.25v4.51h1.13V9.99h1.25v3.51h1.12V9h1.25v5z"/>
-                        </svg>
-                        RAG Technology
-                    </span>
+            <div class="capabilities-info">
+                <p class="capabilities-header">✨ What I can do:</p>
+                <div class="capabilities-grid">
+                    <div class="capability-item">
+                        <span class="cap-icon">📚</span>
+                        <span>Search your knowledge base</span>
+                    </div>
+                    <div class="capability-item">
+                        <span class="cap-icon">💡</span>
+                        <span>Answer questions</span>
+                    </div>
+                    <div class="capability-item">
+                        <span class="cap-icon">✍️</span>
+                        <span>Summarize notes</span>
+                    </div>
+                    <div class="capability-item">
+                        <span class="cap-icon">🎓</span>
+                        <span>Create study materials</span>
+                    </div>
                 </div>
             </div>
         </div>
         {% endif %}
         
-        <!-- Modern Typing Indicator -->
-        <div class="typing-indicator-modern" id="typingIndicator" style="display: none;">
-            <div class="modern-message assistant">
-                <div class="message-bubble">
-                    <div class="message-sender">
-                        <div class="sender-avatar ai-avatar-small">
-                            <div class="ai-glow-small"></div>
-                            🤖
-                        </div>
-                        <span class="sender-name">NexNote AI</span>
+        <!-- Typing indicator -->
+        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+            <div class="message-wrapper assistant">
+                <div class="message-avatar">
+                    <span>🤖</span>
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-role">NexNote</span>
                     </div>
-                    <div class="message-body">
-                        <div class="typing-dots-modern">
+                    <div class="typing-animation">
+                        <div class="typing-dots">
                             <span></span>
                             <span></span>
                             <span></span>
                         </div>
+                        <span class="typing-text">Thinking...</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <!-- Modern Chat Input Area -->
-    <div class="modern-chat-input-area">
-        <div class="input-container-modern">
-            <form id="chatForm" class="modern-chat-form">
-                <!-- Attachment Button -->
-                <button type="button" class="input-action-btn attach-btn" title="Attach file">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-                    </svg>
-                </button>
-
-                <!-- Text Input Area -->
-                <div class="input-wrapper-modern">
-                    <textarea 
-                        id="messageInput" 
-                        name="message" 
-                        placeholder="Ask NexNote anything about your notes..."
-                        rows="1"
-                        maxlength="4000"
-                        autocomplete="off"
-                        class="modern-chat-textarea"
-                    ></textarea>
-                    <div class="input-footer">
-                        <span class="char-count" id="charCount">0 / 4000</span>
-                        <div class="input-hints">
-                            <span class="hint-text">Press Enter to send, Shift+Enter for new line</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="input-actions-group">
-                    <!-- Voice Input Button -->
-                    <button type="button" class="input-action-btn voice-btn" id="voiceBtn" title="Voice input">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                            <line x1="12" y1="19" x2="12" y2="23"/>
-                            <line x1="8" y1="23" x2="16" y2="23"/>
-                        </svg>
-                    </button>
-
-                    <!-- Send Button -->
-                    <button type="submit" class="modern-send-btn" id="sendButton" disabled>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="22" y1="2" x2="11" y2="13"/>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                        </svg>
-                        <span class="send-text">Send</span>
-                    </button>
-                </div>
-            </form>
-
-            <!-- Upload Progress (Hidden by default) -->
-            <div class="upload-progress-modern" id="uploadProgress" style="display: none;">
-                <div class="progress-info">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                        <polyline points="17 8 12 3 7 8"/>
-                        <line x1="12" y1="3" x2="12" y2="15"/>
-                    </svg>
-                    <span class="progress-text">Uploading...</span>
-                    <span class="progress-percent">0%</span>
-                </div>
-                <div class="progress-bar-modern">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-            </div>
+    <div class="chat-input-container">
+        <div class="input-suggestions" id="inputSuggestions" style="display: none;">
+            <!-- Auto-suggestions will appear here -->
         </div>
-
-        <!-- AI Status Footer -->
-        <div class="ai-status-footer">
-            <div class="status-left">
-                <span class="status-dot active"></span>
-                <span class="status-text">AI Ready</span>
+        <form id="chatForm" class="chat-form">
+            <div class="input-wrapper">
+                <textarea 
+                    id="messageInput" 
+                    class="chat-input" 
+                    placeholder="Ask NexNote anything about your notes..."
+                    rows="1"
+                    autocomplete="off"
+                ></textarea>
+                <div class="input-actions">
+                    <button type="button" class="input-action-btn" onclick="clearInput()" title="Clear input">
+                        <span>✖️</span>
+                    </button>
+                </div>
             </div>
-            <div class="status-right">
-                <span class="model-info">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                    </svg>
-                    DeepSeek R1 1.5B
-                </span>
-                <span class="separator">•</span>
-                <span class="rag-info">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8.5 15H7.3l-2.55-3.5V15H3.5V9h1.25l2.5 3.5V9H8.5v6zm5-4.74H11v1.12h2.5v1.26H11v1.11h2.5V15h-4V9h4v1.26zm7 3.74c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1V9h1.25v4.51h1.13V9.99h1.25v3.51h1.12V9h1.25v5z"/>
-                    </svg>
-                    RAG Enabled
-                </span>
-            </div>
+            <button type="submit" class="btn-send" id="sendButton">
+                <span class="send-icon">📤</span>
+                <span class="send-text">Send</span>
+            </button>
+        </form>
+        <div class="input-hint">
+            <span>💡 Press <kbd>Enter</kbd> to send • <kbd>Shift+Enter</kbd> for new line</span>
         </div>
     </div>
 </div>

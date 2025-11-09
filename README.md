@@ -48,15 +48,6 @@ The application allows users to upload their study materials (PDF, DOCX, TXT, Ma
 
 ## ✨ Key Features
 
-### 🎨 Modern User Interface
-- **Redesigned Chat Experience**: Professional, gradient-enhanced UI with smooth animations
-- **AI Avatar with Glow Effects**: Animated AI assistant presence with pulsing indicators
-- **Real-time Status Indicators**: Live metrics showing messages, response time, and accuracy
-- **Quick Action Cards**: Instant access to common tasks (summarize, concepts, quizzes)
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Dark Theme**: Easy-on-the-eyes interface for extended study sessions
-- **Smooth Animations**: GPU-accelerated transitions and entrance effects
-
 ### 🧠 AI & Machine Learning
 - **Retrieval-Augmented Generation (RAG)**: Combines vector similarity search with LLM generation
 - **Semantic Search**: Uses `nomic-embed-text` embeddings (768 dimensions) for accurate context retrieval
@@ -72,11 +63,11 @@ The application allows users to upload their study materials (PDF, DOCX, TXT, Ma
 - **📊 Progress Analytics**: Tracks study sessions, quiz scores, and learning metrics
 - **📅 Study Scheduling**: Optional Google Calendar integration for time management
 
-### 💻 Technical Features
+### � Technical Features
 - **RESTful API**: Well-documented API endpoints for all functionalities
 - **Session Management**: Secure Flask sessions with configurable session storage
 - **File Processing Pipeline**: Robust document parsing with error handling
-- **Modern UI Components**: SVG icons, gradient effects, and professional styling
+- **Responsive UI**: Mobile-first design with modern CSS and vanilla JavaScript
 - **AJAX Operations**: Asynchronous requests for smooth user experience
 - **Error Handling**: Comprehensive error pages and graceful degradation
 
@@ -380,6 +371,23 @@ If calendar integration is enabled:
 - **Load Chat**: Resume previous discussion
 - **Delete Chat**: Remove conversation history
 - **Export Chat**: Save conversation (via browser)
+
+### 💾 Chat History (Saved Automatically)
+
+- The application saves chat conversations automatically on the server so you can resume or review them later.
+- Saved chat files are stored in the `chat_history/` directory in the project root. This directory is git-ignored by default (`.gitignore`) so your conversations and any sensitive data are not committed to source control.
+- File format: each saved conversation is stored as a JSON file named with a timestamp-like id (for example `20251109_143022.json`) containing metadata (title, timestamp) and an array of message objects ({ role, content, timestamp }).
+- Clearing history:
+  - From the web UI: use the **Delete Chat** action to remove individual conversations.
+  - From the server: remove files in the `chat_history/` folder. Example (PowerShell):
+    ```powershell
+    # Delete all saved chats (irreversible)
+    Remove-Item -Path .\chat_history\* -Force
+    ```
+- Exporting chats:
+  - Use the **Export Chat** action in the UI to copy or download a conversation in JSON format.
+  - You can also directly read the JSON files from `chat_history/` to process or back them up.
+- Privacy note: chat history may contain sensitive information from uploaded documents or your prompts. Treat `chat_history/` files as sensitive and do not share them publicly.
 
 #### Progress Tracking
 

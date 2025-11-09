@@ -873,6 +873,7 @@ Future enhancements planned:
 
 ## 🏆 Acknowledgments
 
+- **Damewan Bareh** - Project Developer and Creator
 - **Ollama** - For providing excellent local LLM infrastructure
 - **Pinecone** - For their vector database platform
 - **Flask** - For the robust web framework
@@ -889,4 +890,4 @@ Future enhancements planned:
 
 **Built with ❤️ using Flask, Ollama, and Pinecone**
 
-*Developed as part of an AI/ML engineering demonstration project*
+*Developed by Damewan Bareh as part of an AI/ML engineering demonstration project*

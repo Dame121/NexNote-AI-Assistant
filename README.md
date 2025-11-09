@@ -8,6 +8,8 @@
 
 > **A production-ready Flask application implementing Retrieval-Augmented Generation (RAG) with Pinecone vector database and Ollama's local LLM for intelligent document querying and study assistance.**
 
+**Built as response to "Build Your Own Jarvis" assignment - A personal AI assistant powered by self-hosted LLM with vector database integration for contextual knowledge retrieval.**
+
 ## 📖 Table of Contents
 - [Overview](#-overview)
 - [Key Features](#-key-features)
@@ -24,15 +26,25 @@
 
 ## 🎯 Overview
 
-NexNote is a comprehensive AI-powered study assistant that combines modern web technologies with advanced natural language processing. The application allows users to upload their study materials (PDF, DOCX, TXT, Markdown) and interact with an AI assistant that can answer questions, generate quizzes, create flashcards, and provide intelligent summaries based on the uploaded content.
+NexNote is a comprehensive AI-powered study assistant that combines modern web technologies with advanced natural language processing. Built in response to the **"Build Your Own Jarvis"** programming assignment, this application demonstrates a complete implementation of a personal AI assistant powered by a self-hosted large language model (LLM) with vector database integration.
 
-### Core Capabilities
-- **RAG Implementation**: Retrieval-Augmented Generation using Pinecone for semantic search
-- **Local LLM Integration**: Privacy-focused AI using Ollama (no data sent to external APIs)
-- **Multi-format Document Processing**: Support for PDF, DOCX, TXT, and Markdown files
-- **Interactive Learning Tools**: Automated quiz generation, flashcards, and concept extraction
-- **Calendar Integration**: Optional Google Calendar integration for study scheduling
-- **Responsive Web Interface**: Modern, mobile-friendly UI built with vanilla JavaScript
+The application allows users to upload their study materials (PDF, DOCX, TXT, Markdown) and interact with an AI assistant that can answer questions, generate quizzes, create flashcards, and provide intelligent summaries based on the uploaded content - all using **Retrieval-Augmented Generation (RAG)** architecture.
+
+### Assignment Requirements Fulfilled
+
+✅ **Self-hosted LLM**: Ollama integration with DeepSeek R1 (1.5B parameters)  
+✅ **Vector Database**: Pinecone for semantic search and knowledge retrieval  
+✅ **Conversational Interface**: Full-featured chat UI with context awareness  
+✅ **Knowledge Storage**: Document ingestion, chunking, and embedding generation  
+✅ **Contextual Responses**: RAG implementation for accurate, source-attributed answers  
+
+### Beyond Assignment Requirements
+
+🚀 **Enhanced Study Tools**: Quiz generation, flashcards, concept extraction  
+🚀 **Progress Tracking**: Study analytics and performance monitoring  
+🚀 **Calendar Integration**: Google Calendar API for study scheduling  
+🚀 **Production-Ready**: Security, error handling, comprehensive documentation  
+🚀 **RESTful API**: 20+ endpoints for programmatic access
 
 ## ✨ Key Features
 

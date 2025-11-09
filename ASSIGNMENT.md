@@ -3,15 +3,19 @@
 ## Project Information
 
 **Project Name:** NexNote - AI-Powered Study Assistant  
+**Assignment:** "Build Your Own Jarvis" - Personal AI Assistant  
+**Purpose:** Internship Application Demonstration Project  
+**Developer:** Damewan Bareh  
 **Submission Date:** November 9, 2025  
-**Repository:** [GitHub Repository URL]  
-**Live Demo:** [If deployed]  
+**Repository:** https://github.com/Dame121/NexNote-AI-Assistant  
 
 ---
 
 ## 📝 Executive Summary
 
-NexNote is a production-ready Flask web application that implements Retrieval-Augmented Generation (RAG) architecture to create an intelligent study assistant. The system combines Pinecone vector database for semantic search with Ollama's local language models to provide privacy-preserving AI capabilities for document querying, quiz generation, and study material creation.
+NexNote is a production-ready Flask web application built in response to the **"Build Your Own Jarvis"** programming assignment. This project implements Retrieval-Augmented Generation (RAG) architecture to create an intelligent study assistant that combines Pinecone vector database for semantic search with Ollama's local language models to provide privacy-preserving AI capabilities for document querying, quiz generation, and study material creation.
+
+**This project demonstrates not just meeting the assignment requirements, but exceeding them with production-ready code, comprehensive documentation, and additional features that showcase advanced full-stack development and AI/ML integration skills.**
 
 ### Key Achievements
 
